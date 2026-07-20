@@ -7,28 +7,33 @@
 
 int main()
 {
-    printf("program ran successfully\n");
-
     char in[INPUT_LEN];
     printf("enter expression: ");
-    fgets(in, sizeof in, stdin);
+
+    fgets(in, sizeof(in), stdin);
     int last = strlen(in) - 1;
     in[last] = ';';
 
+    printf("Inputted %s\n\n", in);
+    printf("Token stream: \n\n");
+
     int len = 0;
-    char **tokens = tokenize(in, &len);
+    char** tokens = tokenize(in, &len);
 
     printf("\nToken count: %d\n", len);
 
-    // char** rpn = postfix(ex, len);
-    // printf("\nanswer: %d", solve(rpn, len));
+    int postLen = 0;
+    char **rpn = postfix(tokens, len, &postLen);
 
-    for (int i = 0; i < len; i++)
-    {
-        printf("Index %d: %s\n", i, tokens[i]);
+    printf("The postfix is: \n");
+    for (int i = 0; i < postLen; i++) {
+        printf("%s ", rpn[i]);
+    }
+
+    for (int i = 0; i < len; i++) {
         free(tokens[i]);
     }
 
     free(tokens);
-    return 0;
+    free(rpn);
 }

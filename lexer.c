@@ -1,9 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 
 #include "macros.h"
 #include "methods.h"
@@ -21,14 +18,13 @@ int isInt(char c) {
 }
 
 int isUnary(char **arr, int cnt) {
-    printf("\ncalling isUnary\n");
+
     if (cnt == 0) {
         return 1;
     }
 
     for (int i = cnt - 1; i >= 0; i--) {
         char* element = arr[i];
-        printf("It is: %s\n", element);
         char ch = element[0];
         if (isOp(ch)) {
             return 1;
@@ -76,7 +72,6 @@ char** tokenize(char* input, int* tokenCnt) {
                 char *token = malloc(tokenLen + 1);
 
                 if (unaryMinus) {
-                    printf("Hey this integer needs a negative sign!\n");
                     token[0] = '-';
                 }
 
@@ -94,7 +89,6 @@ char** tokenize(char* input, int* tokenCnt) {
                 if (curr == '-') {
                     negativeCnt++;
                     if (isUnary(tokens, *tokenCnt)) {
-                        printf("Unary operator\n");
                         unaryMinus = !unaryMinus;
                         end++;
                         begin = end;
@@ -112,10 +106,12 @@ char** tokenize(char* input, int* tokenCnt) {
                         token[0] = '-';
                         token[1] = '1';
                         tokens[*tokenCnt] = token;
+                        printf("Token: <%s> at %d\n", token, *tokenCnt);
                         *tokenCnt += 1;
                         char *op = malloc(1);
                         op[0] = '*';
                         tokens[*tokenCnt] = op;
+                        printf("Token: <%s> at %d\n", op, *tokenCnt);
                         *tokenCnt += 1;
                         unaryMinus = 0;
                     }
@@ -123,10 +119,8 @@ char** tokenize(char* input, int* tokenCnt) {
                         char* token = malloc(1);
                         token[0] = '*';
                         tokens[*tokenCnt] = token;
+                        printf("Token: <%s> at %d\n", token, *tokenCnt);
                         *tokenCnt += 1;
-                    }
-                    else {
-                        printf("Whats with these random parenthesese?\n");
                     }
                     
                     unaryMinus = 0;
