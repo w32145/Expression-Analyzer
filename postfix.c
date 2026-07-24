@@ -3,80 +3,119 @@
 #include <string.h>
 
 #include "methods.h"
-#include "stack.h"
 
-int getPrec(char c) {
-    if (c == '(' || c == ')' || c == '^') {
+int getPrec(char c)
+{
+    if (c == '(' || c == ')' || c == '^')
+    {
         return 3;
     }
-    if (c == '*' || c == '/') {
+    if (c == '*' || c == '/')
+    {
         return 2;
     }
-    if (c == '+' || c == '-') {
+    if (c == '+' || c == '-')
+    {
         return 1;
     }
 
     return -1;
 }
 
-int isLeft(char c) {
+int isLeft(char c)
+{
     return (c == '+' || c == '-' || c == '*' || c == '/');
 }
 
-char** postfix(char** tokens, int len, int* postLen) {
-    char** rpn = malloc(sizeof(char*) * len);
-    Stack stack = initStack(len);
-    int idx = 0;
+char **postfix(char **tokens, int len, int *postLen)
+{
+    char **rpn = malloc(sizeof(char *) * len);
+    char stack[len];
+    int si = 0;
 
-    for (int i = 0; i < len; i++) {
-        char* token = tokens[i];
+    for (int i = 0; i < len; i++)
+    {
+        char *token = tokens[i];
         int tokenLen = strlen(token);
 
         char op = token[0];
 
-        if (isOp(op) == 1 && tokenLen == 1) {
-            
-            char top = peek(&stack)[0];
+        if (isOp(op) == 1 && tokenLen == 1)
+        {
 
-            if (op == ')') {
+            char top;
+            if (si > 0)
+            {
+                top = stack[si - 1];
+            }
+            else
+            {
+                top = ' ';
+            }
 
-                while (top != '(' && top != ' ') {
-                    rpn[idx] = peek(&stack);
-                    pop(&stack);
-                    top = peek(&stack)[0];
-                    idx++;
+            if (op == ')')
+            {
+
+                while (top != '(' && si > 0)
+                {
+                    char *toString = malloc(2);
+                    toString[0] = top;
+                    toString[1] = '\0';
+
+                    rpn[(*postLen)] = toString;
+                    si--;
+                    (*postLen)++;
+
+                    if (si > 0)
+                    {
+                        top = stack[si - 1];
+                    }
                 }
-                
-                pop(&stack);
+
+                if (si > 0)
+                {
+                    si--;
+                }
                 continue;
             }
 
-            if (isLeft(op)) {
+            if (isLeft(op))
+            {
 
-                while (getPrec(top) >= getPrec(op) && top != '(') {
-                    rpn[idx] = peek(&stack);
-                    pop(&stack);
-                    top = peek(&stack)[0];
-                    idx++;
+                while (getPrec(top) >= getPrec(op) && top != '(' && si > 0)
+                {
+                    top = stack[si - 1];
+                    char *toString = malloc(2);
+                    toString[0] = top;
+                    toString[1] = '\0';
+                    rpn[(*postLen)] = toString;
+
+                    si--;
+                    (*postLen)++;
                 }
             }
-            
-            push(&stack, token);
-        }
-        else {
-            rpn[idx] = token;
-            idx++;
-        }
 
+            stack[si++] = token[0];
+        }
+        else
+        {
+            char *dest = malloc(tokenLen);
+            memcpy(dest, token, tokenLen);
+            rpn[(*postLen)] = dest;
+            (*postLen)++;
+        }
     }
 
-    while (strcmp(peek(&stack), " ") != 0) {
-        rpn[idx] = peek(&stack);
-        pop(&stack);
-        idx++;
+    while (si > 0)
+    {
+        char top = stack[si - 1];
+        char *toString = malloc(2);
+        toString[0] = top;
+        toString[1] = '\0';
+        rpn[(*postLen)] = toString;
+        si--;
+        (*postLen)++;
     }
-    
-    *postLen = idx;
-    free(stack.arr);
+
     return rpn;
 }

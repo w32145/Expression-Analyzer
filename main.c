@@ -18,7 +18,7 @@ int main()
     printf("Token stream: \n\n");
 
     int len = 0;
-    char** tokens = tokenize(in, &len);
+    char **tokens = tokenize(in, &len);
 
     printf("\nToken count: %d\n", len);
 
@@ -26,12 +26,22 @@ int main()
     char **rpn = postfix(tokens, len, &postLen);
 
     printf("The postfix is: \n");
-    for (int i = 0; i < postLen; i++) {
+    for (int i = 0; i < postLen; i++)
+    {
         printf("%s ", rpn[i]);
     }
 
-    for (int i = 0; i < len; i++) {
+    int answer = solve(rpn, postLen);
+    printf("\nAnswer: %d", answer);
+
+    for (int i = 0; i < len; i++)
+    {
         free(tokens[i]);
+    }
+
+    for (int i = 0; i < postLen; i++)
+    {
+        free(rpn[i]);
     }
 
     free(tokens);
