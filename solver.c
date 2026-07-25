@@ -15,7 +15,7 @@ int solve(char **rpn, int len)
         int right = 0;
         char op = rpn[i][0];
 
-        if (isOp(op))
+        if (isOp(op) && !isNumber(rpn[i]))
         {
 
             if (idx >= 2)
