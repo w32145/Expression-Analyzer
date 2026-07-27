@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "methods.h"
 
-int solve(char **rpn, int len)
+double solve(char **rpn, int len)
 {
-    int numbers[len];
+    double numbers[len];
     int idx = 0;
 
     for (int i = 0; i < len; i++)
     {
 
-        int left = 0;
-        int right = 0;
+        double left = 0;
+        double right = 0;
         char op = rpn[i][0];
 
         if (isOp(op) && !isNumber(rpn[i]))
@@ -37,7 +38,7 @@ int solve(char **rpn, int len)
                 printf("An operator was encountered but there were no operands\n");
             }
 
-            int x = 0;
+            double x = 0;
 
             switch (op)
             {
@@ -56,6 +57,9 @@ int solve(char **rpn, int len)
 
             case '/':
                 x = left / right;
+                break;
+            case '^':
+                x = pow(left, right);
             }
 
             numbers[idx] = x;
@@ -63,7 +67,7 @@ int solve(char **rpn, int len)
         }
         else
         {
-            numbers[idx] = atoi(rpn[i]);
+            numbers[idx] = strtod(rpn[i], NULL);
             idx++;
         }
     }

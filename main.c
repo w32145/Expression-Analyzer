@@ -31,8 +31,8 @@ int main()
         printf("%s ", rpn[i]);
     }
 
-    int answer = solve(rpn, postLen);
-    printf("\nAnswer: %d", answer);
+    double answer = solve(rpn, postLen);
+    printf("\nAnswer: %.2f", answer);
 
     for (int i = 0; i < len; i++)
     {

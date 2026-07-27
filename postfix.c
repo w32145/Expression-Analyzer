@@ -82,7 +82,7 @@ char **postfix(char **tokens, int len, int *postLen)
             if (isLeft(op))
             {
 
-                while (getPrec(top) >= getPrec(op) && top != '(' && si > 0)
+                while (getPrec(top) >= getPrec(op) && isLeft(top) && si > 0)
                 {
                     top = stack[si - 1];
                     char *toString = malloc(2);
@@ -91,6 +91,7 @@ char **postfix(char **tokens, int len, int *postLen)
                     rpn[(*postLen)] = toString;
 
                     si--;
+                    if (si > 0) { top = stack[si - 1];}
                     (*postLen)++;
                 }
             }

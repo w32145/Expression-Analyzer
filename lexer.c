@@ -5,52 +5,73 @@
 #include "macros.h"
 #include "methods.h"
 
-int isOp(char c) {
-    return (c == '+' || c == '-' || c == '(' || c == ')' || c == '*' || c == '/');
+int isOp(char c)
+{
+    return (c == '+' || c == '-' || c == '(' || c == ')' || c == '*' || c == '/' || c == '^');
 }
 
-int isDelim(char c) {
+int isDelim(char c)
+{
     return (c == ' ' || c == ';');
 }
 
-int isInt(char c) {
+int isInt(char c)
+{
     return (c >= 48 && c <= 57);
 }
 
-int isUnary(char **arr, int cnt) {
-
-    if (cnt == 0) {
+int isUnary(char **arr, int cnt)
+{
+    if (cnt == 0)
+    {
         return 1;
     }
 
-    for (int i = cnt - 1; i >= 0; i--) {
-        char* element = arr[i];
+    for (int i = cnt - 1; i >= 0; i--)
+    {
+        char *element = arr[i];
         char ch = element[0];
-        if (isOp(ch)) {
-            return 1;
-        }
-        else if (isInt(ch)) {
+
+        if (isInt(ch))
+        {
             return 0;
         }
 
+        if (isLeft(ch))
+        {
+            return 1;
+        }
+
+        if (ch == '^')
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
     return 0;
 }
 
-int isNumber(char* token) {
+int isNumber(char *token)
+{
     int len = strlen(token);
-    for (int i = 0; i < len; i++) {
-        if (isInt(token[i])) {
+    for (int i = 0; i < len; i++)
+    {
+        if (isInt(token[i]))
+        {
             return 1;
         }
     }
     return 0;
 }
 
-char** tokenize(char* input, int* tokenCnt) {
-    
+char **tokenize(char *input, int *tokenCnt)
+{
+
     int len = strlen(input);
-    char **tokens = malloc(sizeof(char*) * len);
+    char **tokens = malloc(sizeof(char *) * len);
 
     int end = 0;
     int begin = 0;
@@ -59,11 +80,14 @@ char** tokenize(char* input, int* tokenCnt) {
     int unaryMinus = 0;
     int negativeCnt = 0;
 
-    while (end < len) {
+    while (end < len)
+    {
 
-        if (!isInt(curr)) {
+        if (!isInt(curr))
+        {
 
-            if (begin < end) {
+            if (begin < end)
+            {
 
                 int tokenLen = end - begin + unaryMinus;
                 char temp[tokenLen];
@@ -71,7 +95,8 @@ char** tokenize(char* input, int* tokenCnt) {
 
                 char *token = malloc(tokenLen + 1);
 
-                if (unaryMinus) {
+                if (unaryMinus)
+                {
                     token[0] = '-';
                 }
 
@@ -85,10 +110,13 @@ char** tokenize(char* input, int* tokenCnt) {
                 unaryMinus = 0;
             }
 
-            if (isOp(curr)) {
-                if (curr == '-') {
+            if (isOp(curr))
+            {
+                if (curr == '-')
+                {
                     negativeCnt++;
-                    if (isUnary(tokens, *tokenCnt)) {
+                    if (isUnary(tokens, *tokenCnt))
+                    {
                         unaryMinus = !unaryMinus;
                         end++;
                         begin = end;
@@ -96,12 +124,14 @@ char** tokenize(char* input, int* tokenCnt) {
                         continue;
                     }
                 }
-                //because it may begin with a -(...
-                // only distribute -1 when its a unary minus
+                // because it may begin with a -(...
+                //  only distribute -1 when its a unary minus
 
-                else if (curr == '(' && (*tokenCnt > 0 || unaryMinus)) {
+                else if (curr == '(' && (*tokenCnt > 0 || unaryMinus))
+                {
                     int prev = *tokenCnt - 1;
-                    if (unaryMinus) {
+                    if (unaryMinus)
+                    {
                         char *token = malloc(2);
                         token[0] = '-';
                         token[1] = '1';
@@ -115,14 +145,15 @@ char** tokenize(char* input, int* tokenCnt) {
                         *tokenCnt += 1;
                         unaryMinus = 0;
                     }
-                    else if (isNumber(tokens[prev])) {
-                        char* token = malloc(1);
+                    else if (isNumber(tokens[prev]))
+                    {
+                        char *token = malloc(1);
                         token[0] = '*';
                         tokens[*tokenCnt] = token;
                         printf("Token: <%s> at %d\n", token, *tokenCnt);
                         *tokenCnt += 1;
                     }
-                    
+
                     unaryMinus = 0;
                 }
 
@@ -134,13 +165,13 @@ char** tokenize(char* input, int* tokenCnt) {
                 tokens[*tokenCnt] = op;
                 *tokenCnt += 1;
             }
-            else if (!isDelim(curr)) {
+            else if (!isDelim(curr))
+            {
                 printf("symbol %c not recognized!\n", curr);
             }
 
             begin = end + 1;
         }
-
 
         end++;
         curr = input[end];
