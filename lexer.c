@@ -42,7 +42,7 @@ int isUnary(char **arr, int cnt)
             return 1;
         }
 
-        if (ch == '^')
+        if (ch == '^' || ch == '(')
         {
             return 1;
         }
@@ -129,7 +129,7 @@ char **tokenize(char *input, int *tokenCnt)
 
                 else if (curr == '(' && (*tokenCnt > 0 || unaryMinus))
                 {
-                    int prev = *tokenCnt - 1;
+                    char* prev = tokens[(*tokenCnt - 1)];
                     if (unaryMinus)
                     {
                         char *token = malloc(2);
@@ -145,7 +145,7 @@ char **tokenize(char *input, int *tokenCnt)
                         *tokenCnt += 1;
                         unaryMinus = 0;
                     }
-                    else if (isNumber(tokens[prev]))
+                    else if (isNumber(prev) || prev[0] == ')')
                     {
                         char *token = malloc(1);
                         token[0] = '*';
@@ -154,6 +154,7 @@ char **tokenize(char *input, int *tokenCnt)
                         *tokenCnt += 1;
                     }
 
+                    prev = NULL; // to prevent tokens from being overwritten
                     unaryMinus = 0;
                 }
 
