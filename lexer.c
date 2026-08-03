@@ -17,7 +17,7 @@ int isDelim(char c)
 
 int isInt(char c)
 {
-    return (c >= 48 && c <= 57);
+    return (c >= 48 && c <= 57 || c == '.');
 }
 
 int isUnary(char **arr, int cnt)
