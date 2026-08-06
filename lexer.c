@@ -127,9 +127,19 @@ char **tokenize(char *input, int *tokenCnt)
                 // because it may begin with a -(...
                 //  only distribute -1 when its a unary minus
 
-                else if (curr == '(' && (*tokenCnt > 0 || unaryMinus))
+                else if (curr == '(')
                 {
-                    char* prev = tokens[(*tokenCnt - 1)];
+                    char *prev;
+
+                    if (*tokenCnt > 0)
+                    {
+                        prev = tokens[(*tokenCnt - 1)];
+                    }
+                    else
+                    {
+                        prev = " ";
+                    }
+
                     if (unaryMinus)
                     {
                         char *token = malloc(2);
@@ -145,7 +155,7 @@ char **tokenize(char *input, int *tokenCnt)
                         *tokenCnt += 1;
                         unaryMinus = 0;
                     }
-                    else if (isNumber(prev) || prev[0] == ')')
+                    else if (*tokenCnt > 0 && (isNumber(prev) || prev[0] == ')'))
                     {
                         char *token = malloc(1);
                         token[0] = '*';
@@ -168,7 +178,8 @@ char **tokenize(char *input, int *tokenCnt)
             }
             else if (!isDelim(curr))
             {
-                printf("symbol %c not recognized!\n", curr);
+                //printf("symbol %c not recognized!\n", curr);
+                // just ignore
             }
 
             begin = end + 1;
