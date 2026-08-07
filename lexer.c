@@ -82,10 +82,13 @@ char **tokenize(char *input, int *tokenCnt)
 
     while (end < len)
     {
+
         if (!isInt(curr))
         {
+
             if (begin < end)
             {
+
                 int tokenLen = end - begin + unaryMinus;
                 char temp[tokenLen];
                 strncpy(temp, input + begin, tokenLen);
@@ -131,7 +134,7 @@ char **tokenize(char *input, int *tokenCnt)
                     if (*tokenCnt > 0)
                     {
                         prev = tokens[(*tokenCnt - 1)];
-                        if ((isNumber(prev) || prev[0] == ')')) 
+                        if ((isNumber(prev) || prev[0] == ')'))
                         {
                             char *token = malloc(2);
                             token[0] = '*';
@@ -140,15 +143,12 @@ char **tokenize(char *input, int *tokenCnt)
                             printf("Token: <%s> at %d\n", token, *tokenCnt);
                             *tokenCnt += 1;
                         }
-
                     }
-
                     else if (unaryMinus)
                     {
-                        char *token = malloc(3);
+                        char *token = malloc(2);
                         token[0] = '-';
                         token[1] = '1';
-                        token[2] = '\0';
                         tokens[*tokenCnt] = token;
                         printf("Token: <%s> at %d\n", token, *tokenCnt);
                         *tokenCnt += 1;
@@ -165,7 +165,7 @@ char **tokenize(char *input, int *tokenCnt)
                     unaryMinus = 0;
                 }
 
-                char *op = malloc(2);
+                char *op = malloc(1);
                 op[0] = curr;
                 op[1] = '\0';
                 printf("Token: <%s> at %d\n", op, *tokenCnt);
@@ -175,8 +175,8 @@ char **tokenize(char *input, int *tokenCnt)
             }
             else if (!isDelim(curr))
             {
-                //printf("symbol %c not recognized!\n", curr);
-                // just ignore
+                // printf("symbol %c not recognized!\n", curr);
+                //  just ignore
             }
 
             begin = end + 1;
