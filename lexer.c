@@ -82,13 +82,10 @@ char **tokenize(char *input, int *tokenCnt)
 
     while (end < len)
     {
-
         if (!isInt(curr))
         {
-
             if (begin < end)
             {
-
                 int tokenLen = end - begin + unaryMinus;
                 char temp[tokenLen];
                 strncpy(temp, input + begin, tokenLen);
@@ -134,41 +131,41 @@ char **tokenize(char *input, int *tokenCnt)
                     if (*tokenCnt > 0)
                     {
                         prev = tokens[(*tokenCnt - 1)];
-                    }
-                    else
-                    {
-                        prev = " ";
+                        if ((isNumber(prev) || prev[0] == ')')) 
+                        {
+                            char *token = malloc(2);
+                            token[0] = '*';
+                            token[1] = '\0';
+                            tokens[*tokenCnt] = token;
+                            printf("Token: <%s> at %d\n", token, *tokenCnt);
+                            *tokenCnt += 1;
+                        }
+
                     }
 
-                    if (unaryMinus)
+                    else if (unaryMinus)
                     {
-                        char *token = malloc(2);
+                        char *token = malloc(3);
                         token[0] = '-';
                         token[1] = '1';
+                        token[2] = '\0';
                         tokens[*tokenCnt] = token;
                         printf("Token: <%s> at %d\n", token, *tokenCnt);
                         *tokenCnt += 1;
-                        char *op = malloc(1);
+                        char *op = malloc(2);
                         op[0] = '*';
+                        op[1] = '\0';
                         tokens[*tokenCnt] = op;
                         printf("Token: <%s> at %d\n", op, *tokenCnt);
                         *tokenCnt += 1;
                         unaryMinus = 0;
-                    }
-                    else if (*tokenCnt > 0 && (isNumber(prev) || prev[0] == ')'))
-                    {
-                        char *token = malloc(1);
-                        token[0] = '*';
-                        tokens[*tokenCnt] = token;
-                        printf("Token: <%s> at %d\n", token, *tokenCnt);
-                        *tokenCnt += 1;
                     }
 
                     prev = NULL; // to prevent tokens from being overwritten
                     unaryMinus = 0;
                 }
 
-                char *op = malloc(1);
+                char *op = malloc(2);
                 op[0] = curr;
                 op[1] = '\0';
                 printf("Token: <%s> at %d\n", op, *tokenCnt);
